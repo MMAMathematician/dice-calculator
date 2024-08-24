@@ -7,11 +7,11 @@ import seaborn as sns
 import pandas as pd
 
 with st.sidebar:
-    die_skill = st.selectbox('Size of Skill Die', [4, 6, 8, 10, 12])
-    die_tool = st.selectbox('Size of Tool Die', [0, 4, 6, 8, 10, 12])
-    mod_base = st.slider('Base Modifier', max_value=12)
-    mod_bonus = st.slider('Bonus Modifier', max_value=12)
-    dif_score = st.slider('Difficulty Score', max_value=20)
+    die_skill = st.selectbox('Size of Skill Die', [4, 6, 8, 10, 12, 20])
+    die_tool = st.selectbox('Size of Tool Die', [0, 4, 6, 8, 10, 12, 20])
+    mod_base = st.slider('Base Modifier', max_value=20)
+    mod_bonus = st.slider('Bonus Modifier', max_value=20)
+    dif_score = st.slider('Difficulty Score', max_value=40)
 
     mod_total = mod_base + mod_bonus
     
@@ -35,7 +35,7 @@ with st.sidebar:
     st.text(f'Q1:       {np.quantile(scores, 0.25)}')
     st.text(f'Mean:     {np.mean(scores)}')
     st.text(f'Median:   {np.median(scores)}')
-    st.text(f'Mode(s):  {statistics.multimode(scores)}')
+    st.text(f'Mode(s):  {', '.join(map(str, statistics.multimode(scores)))}')
     st.text(f'Q3:       {np.quantile(scores, 0.75)}')
     st.text(f'Max:      {np.max(scores)}')
     st.text(f'IQR:      {stats.iqr(scores)}')
