@@ -9,26 +9,30 @@ import pandas as pd
 with st.sidebar:
     die_skill = st.selectbox('Size of Skill Die', [4, 6, 8, 10, 12, 20])
     die_tool = st.selectbox('Size of Tool Die', [0, 4, 6, 8, 10, 12, 20])
+    die_assist = st.selectbox('Size of Assist Die', [0, 4, 6, 8, 10, 12, 20])
     mod_base = st.slider('Base Modifier', max_value=20)
     mod_bonus = st.slider('Bonus Modifier', max_value=20)
     dif_score = st.slider('Difficulty Score', max_value=40)
 
     mod_total = mod_base + mod_bonus
     
-    scores = []
-
-    if (die_tool == 0):
-        scores = range(1 + mod_total, die_skill + mod_total + 1)
-    else:
-        for s in range(1, die_skill + 1):
-            for t in range(1, die_tool + 1):
-                scores.append(s + t + mod_total)
-                
+    dice = [die_skill, die_tool, die_assist]
+    dice = [die for die in dice if die != 0]
+    
+    dist = np.array([1])
+    for die in dice:
+        unif = np.full((die), 1)
+        dist = np.convolve(dist, unif)
+        
+    roll_nums = range(mod_total + len(dice), np.sum(dice) + mod_total + 1)
+        
+    df = pd.merge(left=pd.DataFrame(roll_nums, columns=['Score']), right=pd.DataFrame(dist, columns=['Frequency']), left_index=True, right_index=True)
+    
+    df['Win'] = df['Score'] >= dif_score
+    
+    scores = df.loc[df.index.repeat(df['Frequency'])]['Score']
     scores = np.array(scores).astype(float)
-    
-    win_col = scores >= dif_score
-    
-    df = pd.merge(left=pd.DataFrame(scores, columns=['Score']), right=pd.DataFrame(win_col, columns=['Win']), left_index=True, right_index=True)
+
     win_rate = np.count_nonzero(scores >= dif_score)/len(scores)
 
     st.text(f'Min:      {np.min(scores)}')
@@ -54,7 +58,7 @@ sns.set_theme(rc={'axes.facecolor':'#0E1117',
 
 fig = plt.figure()
 
-ax = sns.histplot(data=df, x='Score', binwidth=1, discrete=True, stat="density", hue='Win', palette={True: '#4BFF4B', False: '#FF4B4B'}, legend=False)
+ax = sns.histplot(data=df, x='Score', weights='Frequency', binwidth=1, discrete=True, stat="density", hue='Win', palette={True: '#4BFF4B', False: '#FF4B4B'}, legend=False)
 
 st.pyplot(fig)
 
