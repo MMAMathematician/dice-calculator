@@ -2,7 +2,8 @@ import streamlit as st
 import numpy as np
 from common.common import *
 
-st.set_page_config(page_title="Fixed Dice")
+st.set_page_config(page_title="Fixed Dice Calculator")
+st.title("Fixed Dice Calculator")
 
 with st.sidebar:
     die_skill = st.selectbox('Size of Skill Die', [4, 6, 8, 10, 12, 20])

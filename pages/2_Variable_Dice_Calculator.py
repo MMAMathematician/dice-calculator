@@ -7,7 +7,8 @@ import seaborn as sns
 import pandas as pd
 from common.common import *
 
-st.set_page_config(page_title="Variable Dice")
+st.set_page_config(page_title="Variable Dice Calculator")
+st.title("Variable Dice Calculator")
 
 with st.sidebar:
     d4_skill = st.number_input("Number of d4s", value=1)
