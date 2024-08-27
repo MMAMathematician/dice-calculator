@@ -22,15 +22,11 @@ def dice_dist(dice, mod_total):
     return df
 
 def calculate_quartile(cumcount, scores, count, quartile):
-    print(cumcount)
     pos = quartile * (count - 1) + 1
-    print(pos)
     idl = np.searchsorted(cumcount, np.floor(pos), side="left")
     idr = np.searchsorted(cumcount, np.ceil(pos), side="left")
     left_value = scores[idl]
-    print(left_value)
     right_value = scores[idr]
-    print(right_value)
     return left_value + (pos - np.floor(pos)) * (right_value - left_value)
 
 def print_summary_stats(df):
