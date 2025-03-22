@@ -57,7 +57,7 @@ def print_summary_stats(df):
     st.text(f'IQR:      {IQR:.2f}')
     st.text(f'STD:      {std:.2f}')
     
-def plot_graph_and_print_values(df, dif_score):
+def plot_graph_and_print_values(df, dif_score, show_crit=True):
     df['Win'] = df['Score'] >= dif_score
     
     count = df['Frequency'].sum()
@@ -87,4 +87,5 @@ def plot_graph_and_print_values(df, dif_score):
         st.metric(label="Win Rate", value=f"{win_rate*100:.2f}%")
 
     with col2:
-        st.metric(label="Critical Rate", value=f"{df['Critical Hits'].sum()/count*100:.2f}%")
+        if show_crit == True:    
+            st.metric(label="Critical Rate", value=f"{df['Critical Hits'].sum()/count*100:.2f}%")
